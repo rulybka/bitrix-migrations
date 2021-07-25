@@ -14,8 +14,7 @@ use Arrilot\BitrixMigrations\Storages\BitrixDatabaseStorage;
 use Arrilot\BitrixMigrations\TemplatesCollection;
 use Symfony\Component\Console\Application;
 
-define("NOT_CHECK_PERMISSIONS", true);
-$_SERVER["DOCUMENT_ROOT"] = __DIR__;
+$_SERVER["DOCUMENT_ROOT"] = __DIR__ . '/public';
 $DOCUMENT_ROOT = $_SERVER["DOCUMENT_ROOT"];
 require $_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_before.php";
 
@@ -23,7 +22,7 @@ CModule::IncludeModule("iblock");
 
 $config = [
     'table' => 'migrations',
-    'dir' => './migrations',
+    'dir' => './src/AppBundle/Migrations',
     // 'dir_archive' => 'archive', // not required. default = "archive"
     'use_transaction' => true, // not required. default = false
     'default_fields' => [
@@ -31,7 +30,7 @@ $config = [
             'INDEX_ELEMENT' => 'N',
             'INDEX_SECTION' => 'N',
             'VERSION' => 2,
-            'SITE_ID' => 's1',
+            'SITE_ID' => 's2',
         ]
     ]
 ];

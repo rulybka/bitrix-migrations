@@ -6,12 +6,6 @@
     "bitrix",
     "migrations"
   ],
-  "authors": [
-    {
-      "name": "Nekrasov Ilya",
-      "email": "nekrasov.ilya90@gmail.com"
-    }
-  ],
   "homepage": "https://github.com/rulybka/bitrix-migrations",
   "require": {
     "php": ">=5.5.0",
@@ -24,12 +18,12 @@
   },
   "autoload": {
     "psr-4": {
-      "Arrilot\\BitrixMigrations\\": "src/"
+      "Rulybka\\BitrixMigrations\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Arrilot\\Tests\\BitrixMigrations\\": "tests/"
+      "Rulybka\\Tests\\BitrixMigrations\\": "tests/"
     }
   }
 }
