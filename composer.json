@@ -18,12 +18,12 @@
   },
   "autoload": {
     "psr-4": {
-      "Rulybka\\BitrixMigrations\\": "src/"
+      "Arrilot\\BitrixMigrations\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Rulybka\\Tests\\BitrixMigrations\\": "tests/"
+      "Arrilot\\Tests\\BitrixMigrations\\": "tests/"
     }
   }
 }
