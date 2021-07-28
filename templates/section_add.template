@@ -1,0 +1,60 @@
+<?php
+
+use Arrilot\BitrixMigrations\BaseMigrations\BitrixMigration;
+use Arrilot\BitrixMigrations\Logger;
+use AppBundle\Application;
+
+class __className__ extends BitrixMigration
+{
+    private $iblockId;
+
+    public function __construct()
+    {
+        $this->iblockId = Application::getInstance()->getContainer()->getParameter('__')['__']['__'];
+    }
+
+    protected function getSectId()
+    {
+        $result = \CIBlockSection::GetList(
+            ['SORT' => 'DESC'],
+            ['CODE' => '__CODE__', 'IBLOCK_ID' => $this->iblockId], ['ID']
+        );
+        return $result->GetNext()['ID'];
+    }
+
+    protected function getPropId()
+    {
+        $result = CIBlock::GetProperties($this->iblockId, ["CODE"=>'__CODE__']);
+        return $result->Fetch()["ID"];
+    }
+
+    public function up()
+    {
+        if ($this->getSectId()) {
+            Logger::log("Add section fail. Section Code is already exist.", Logger::COLOR_RED);
+            return false;
+        }
+        $fields = [
+            'CODE' => '__CODE__',
+            "NAME" => '__NAME__',
+            "SORT" => 0,
+            "ACTIVE" => 'Y',
+            "IBLOCK_ID" => $this->iblockId,
+            "IBLOCK_SECTION_ID" => __PARENT_SECTION__,
+            'UF_PROPERTY_ID' => $this->getPropId()
+        ];
+        $sect = new CIBlockSection;
+        $sect->add($fields);
+        Logger::log("Section added successfully", Logger::COLOR_GREEN);
+    }
+
+    public function down()
+    {
+        if ($this->getSectId()) {
+            CIBlockSection::Delete($this->getSectId());
+            Logger::log("Rollback successfully. Section was delete.", Logger::COLOR_GREEN);
+        } else {
+            Logger::log("Fail rollback. Section was not delete.", Logger::COLOR_RED);
+        }
+    }
+}

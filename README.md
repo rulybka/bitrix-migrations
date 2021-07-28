@@ -1,27 +1,14 @@
-[![Latest Stable Version](https://poser.pugx.org/arrilot/bitrix-migrations/v/stable.svg)](https://packagist.org/packages/arrilot/bitrix-migrations/)
-[![Total Downloads](https://img.shields.io/packagist/dt/arrilot/bitrix-migrations.svg?style=flat)](https://packagist.org/packages/Arrilot/bitrix-migrations)
-[![Build Status](https://img.shields.io/travis/arrilot/bitrix-migrations/master.svg?style=flat)](https://travis-ci.org/arrilot/bitrix-migrations)
-[![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/arrilot/bitrix-migrations/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/arrilot/bitrix-migrations/)
-
-# Данный пакет больше активно не поддерживается
-
-Причина - мы больше не используем Битрикс в своих проектах.
-Если вам интересен этот проект и вы хотите заняться его поддержкой - форкните его и создайте Issue в данном репозитории чтобы мы поместили здесь ссылку на форк.
-
-Форки:
-- https://github.com/informunity/bitrix-migrations
-
 # Bitrix-migrations
 
 *Миграции БД для Битрикса и не только*
 
 ## Установка
 
-1) `composer require arrilot/bitrix-migrations`
+1) `composer require rulybka/bitrix-migrations`
 
 2) `cp vendor/arrilot/bitrix-migrations/migrator migrator` - копируем исполняемый файл в удобное место.
 
-3) заходим внутрь и удостоверяемся что задается правильный $_SERVER['DOCUMENT_ROOT']. Меняем настройки если нужно
+3) заходим внутрь и удостоверяемся что задается правильный $_SERVER['DOCUMENT_ROOT']. Меняем настройки если нужно.
 
 4) `php migrator install`
 
@@ -49,7 +36,7 @@
 
 Файл миграции представляет из себя класс с двумя методами `up()` и `down()`
 
-2) Реализуем в методе `up()`необходимые изменения в БД. При желании в методе `down()` реализуем откат этих измнений
+2) Реализуем в методе `up()`необходимые изменения в БД. При желании в методе `down()` реализуем откат этих изменений
 
 3) Применяем имеющиеся миграции - `php migrator migrate`
 
@@ -63,11 +50,11 @@
 <table>
 <tr><th>Название</th><th>Описание</th></tr>
 <tr>
-    <td>`php migrator install`</td>
+    <td>php migrator install</td>
     <td>Создает таблицу для хранения миграций. Запускается один раз.</td>
 </tr>
 <tr>
-    <td>`php migrator make название_миграции`</td>
+    <td>php migrator make название_миграции</td>
     <td>
         Создает файл миграции
         Опции:<br>
@@ -75,11 +62,11 @@
     </td>
 </tr>
 <tr>
-    <td>`php migrator migrate`</td>
+    <td>php migrator migrate</td>
     <td>Применяет все доступные для применения миграции. Миграции примененные ранее не применяются.</td>
 </tr>
 <tr>
-    <td>`php migrator rollback`</td>
+    <td>php migrator rollback</td>
     <td>
         Откатывает последнюю миграцию (метод `down()`). После этого её можно применить повторно.<br>
         Опции:<br>
@@ -88,15 +75,15 @@
     </td>
 </tr>
 <tr>
-    <td>`php migrator templates`</td>
+    <td>php migrator templates</td>
     <td>Показывает подробную таблицу со всем существующими шаблонами миграций</td>
 </tr>
 <tr>
-    <td>`php migrator status`</td>
+    <td>php migrator status</td>
     <td>Показывает доступные для выполнения миграции, а также последние выполненные.</td>
 </tr>
 <tr>
-    <td>`php migrator archive`</td>
+    <td>php migrator archive</td>
     <td>
         Переносит все миграции в архив. По умолчанию это директория archive, но можно переопределить в конфиге, указав "dir_archive"<br>
         Опции:<br>
@@ -107,7 +94,6 @@
 
 ### Шаблоны миграций
 
-Так как изменение структуры БД битрикса через его АПИ  - занятие крайне малоприятное, то для облегчения этого процесса есть механизм шаблонов миграций, работающий следущим образом:
 При генерации файла миграции можно указать его шаблон: `php migrator make название_миграции -t add_iblock` где `add_block` - название шаблона.
 При этом сгенерируется класс с бойлерплейтом из шаблона и остается лишь указать детали (например название и код инфоблока)
 Свои шаблоны миграций можно добавить напрямую в файле `migrator` при помощи `TemplateCollection::registerTemplate()`
@@ -156,6 +142,21 @@
     <td>Удаление таблицы через АПИ d7</td>
     <td>`drop_table`</td>
 </tr>
+<tr>
+    <td>`element_add`</td>
+    <td>Добавление элемента в раздел инфоблока</td>
+    <td></td>
+</tr>
+<tr>
+    <td>`section_add`</td>
+    <td>Добавление раздела в инфоблок инфоблока</td>
+    <td></td>
+</tr>
+<tr>
+    <td>`hlb_element_add`</td>
+    <td>Добавление элемента в сущность хайлоада</td>
+    <td></td>
+</tr>
 </table>
 
 6) `php migrator status` - показывает доступные для выполнения миграции, а также последние выполненные.
@@ -163,7 +164,6 @@
 
 ### Автоматическое создание миграций
 
-Еще одна киллер-фича - режим автоматического создания миграций.
 Для его включения необходимо добавить примерно следующее в `init.php`
 
 ```php

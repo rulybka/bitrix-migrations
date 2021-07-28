@@ -1,0 +1,71 @@
+<?php
+require($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_before.php");
+
+use Arrilot\BitrixMigrations\BaseMigrations\BitrixMigration;
+use Arrilot\BitrixMigrations\Logger;
+use Bitrix\Highloadblock\HighloadBlockTable as HLBT;
+use AppBundle\Application;
+
+\Bitrix\Main\Loader::includeModule("highloadblock");
+
+class __className__ extends BitrixMigration
+{
+    private $iblockId;
+
+    public function __construct()
+    {
+        $this->iblockId = Application::getInstance()->getContainer()->getParameter('__')['__']['__'];
+    }
+
+    protected function getEntityDataClass()
+    {
+        if (empty($this->hlbId) || $this->hlbId < 1) {
+            return false;
+        }
+        $hlblock = HLBT::getById($this->hlbId)->fetch();
+        $entity  = HLBT::compileEntity($hlblock);
+        $entityDataClass = $entity->getDataClass();
+        return $entityDataClass;
+    }
+
+    protected function getElemId()
+    {
+        $entityDataClass = $this->GetEntityDataClass();
+        $select = ['ID'];
+        $filter = ['UF_XML_ID' => '__UF_XML_ID__'];
+        $order =  ['ID' => 'desc'];
+        $result = $entityDataClass::getList(['select' => $select, 'filter' => $filter, 'order' => $order]);
+        return $result->fetch()['ID'];
+    }
+
+    public function up()
+    {
+        $entityDataClass = $this->GetEntityDataClass();
+        $elemId = $this->getElemId();
+
+        if (!$elemId) {
+            $entityDataClass::add([
+                'UF_XML_ID'       => '__XML__',
+                'UF_NAME'         => '__NAME__',
+                'UF_SECTION_ID'   => $this->rootSectId,
+                'UF_PROPERTY_ID'  => $this->getPropId()
+            ]);
+            Logger::log("Highload element added successfully.", Logger::COLOR_GREEN);
+        } else {
+            Logger::log("Fail migrate. UF_XML_ID is exist.", Logger::COLOR_RED);
+            return false;
+        }
+    }
+
+    public function down()
+    {
+        $entityDataClass = $this->GetEntityDataClass();
+        $elemId = $this->getElemId();
+        if ($elemId) {
+            $entityDataClass::delete($elemId);
+            Logger::log("Rollback successfully. Element was delete.", Logger::COLOR_GREEN);
+        } else {
+            Logger::log("Fail rollback. UF_XML_ID not found.", Logger::COLOR_RED);
+        }
+    }
+}
