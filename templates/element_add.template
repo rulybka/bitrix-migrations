@@ -1,0 +1,73 @@
+<?php
+use Arrilot\BitrixMigrations\BaseMigrations\BitrixMigration;
+use Arrilot\BitrixMigrations\Logger;
+use AppBundle\Application;
+
+class __className__ extends BitrixMigration
+{
+    private $iblockId;
+
+    public function __construct()
+    {
+        $this->iblockId = Application::getInstance()->getContainer()->getParameter('__')['__']['__'];
+    }
+
+    protected function getSectId()
+    {
+        $result = CIBlockSection::GetList(
+            ['SORT' => 'DESC'],
+            ['CODE' => '__CODE__', 'IBLOCK_ID' => $this->iblockId],
+            ['ID']
+        );
+        return $result->GetNext()['ID'];
+    }
+
+    protected function getElemId()
+    {
+        $order  = ['SORT' => 'DESC'];
+        $select = ['ID'];
+        $filter = ['CODE' => '__CODE__', 'SECTION_ID' => $this->getSectId(), "ACTIVE" => "Y"];
+        $result = CIBlockElement::GetList($order, $filter, $select);
+        $data = $result->GetNextElement();
+        if ($data) {
+            return $data->GetFields()['ID'];
+        }
+    }
+
+    public function up()
+    {
+        $elemId = $this->getElemId();
+        if ($elemId) {
+            Logger::log("Add element fail. Element with same id is already exist.", Logger::COLOR_RED);
+            return false;
+        }
+
+        global $USER;
+        $el = new CIBlockElement;
+        $fields = [
+            'CODE' => '__CODE__',
+            "IBLOCK_SECTION_ID" => $this->getSectId(),
+            "MODIFIED_BY"    => $USER->GetID(),
+            "IBLOCK_ID"      => $this->iblockId,
+            "NAME"           => "__NAME__",
+            "ACTIVE"         => "Y"
+        ];
+
+        if ($el->add($fields)) {
+            Logger::log("Element was created successfully.", Logger::COLOR_GREEN);
+        } else {
+            Logger::log("Fail add element.", Logger::COLOR_RED);
+            return false;
+        }
+    }
+
+    public function down()
+    {
+        if ($this->getElemId()) {
+            CIBlockElement::delete($this->getElemId());
+            Logger::log("Rollback successfully. Element was delete.", Logger::COLOR_GREEN);
+        } else {
+            Logger::log("Fail rollback. Element not found.", Logger::COLOR_RED);
+        }
+    }
+}

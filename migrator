@@ -18,7 +18,7 @@ $_SERVER["DOCUMENT_ROOT"] = __DIR__ . '/public';
 $DOCUMENT_ROOT = $_SERVER["DOCUMENT_ROOT"];
 require $_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_before.php";
 
-CModule::IncludeModule("iblock");
+\CModule::IncludeModule("iblock");
 
 $config = [
     'table' => 'migrations',
