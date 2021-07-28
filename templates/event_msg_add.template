@@ -1,0 +1,49 @@
+<?php
+
+use Arrilot\BitrixMigrations\BaseMigrations\BitrixMigration;
+use Arrilot\BitrixMigrations\Exceptions\MigrationException;
+
+class __className__ extends BitrixMigration
+{
+    const EVENT_NAME = '';
+
+    /**
+     * Run the migration.
+     *
+     * @return mixed
+     * @throws \Exception
+     */
+    public function up()
+    {
+        $arr["ACTIVE"] = "Y";
+        $arr["EVENT_NAME"] = self::EVENT_NAME;
+        $arr["LID"] = "s2";
+        $arr["EMAIL_FROM"] = "#DEFAULT_EMAIL_FROM#";
+        $arr["EMAIL_TO"] = "#EMAIL_TO#";
+        $arr["BCC"] = "";
+        $arr["SUBJECT"] = "";
+        $arr["BODY_TYPE"] = "text";
+        $arr["MESSAGE"] = "";
+        $obTemplate = new \CEventMessage;
+        $obTemplate->Add($arr);
+    }
+
+    /**
+     * Reverse the migration.
+     *
+     * @return mixed
+     * @throws \Exception
+     */
+    public function down()
+    {
+        $by="site_id";
+        $order="desc";
+        $filter = ["TYPE_ID" => self::EVENT_NAME];
+
+        $rsMsg = \CEventMessage::GetList($by, $order, $filter);
+        $arMsg = $rsMsg->GetNext();
+        $idMsg = $arMsg['ID'];
+
+        \CEventMessage::Delete($idMsg);
+    }
+}
