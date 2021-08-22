@@ -88,6 +88,33 @@ class TemplatesCollection
                 'path'        => $this->dir.'/query.template',
                 'description' => 'Simple database query',
             ],
+
+            [
+                'name'        => 'element_add',
+                'path'        => $this->dir.'/element/element_add.template',
+                'description' => 'Add new element',
+            ],
+            [
+                'name'        => 'section_add',
+                'path'        => $this->dir.'/section/section_add.template',
+                'description' => 'Add new section',
+            ],
+            [
+                'name'        => 'hlb_element_add',
+                'path'        => $this->dir.'/hlb/hlb_element_add.template',
+                'description' => 'Add element in highload block',
+            ],
+            [
+                'name'        => 'event_add',
+                'path'        => $this->dir.'/event/event_add.template',
+                'description' => 'Add new event',
+            ],
+            [
+                'name'        => 'event_msg_add',
+                'path'        => $this->dir.'/event/event_msg_add.template',
+                'description' => 'Add new event template',
+            ],
+
         ];
 
         foreach ($templates as $template) {

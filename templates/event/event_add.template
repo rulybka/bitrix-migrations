@@ -1,0 +1,46 @@
+<?php
+use Arrilot\BitrixMigrations\BaseMigrations\BitrixMigration;
+use Arrilot\BitrixMigrations\Logger;
+
+class __className__ extends BitrixMigration
+{
+    const EVENT_NAME = '__';
+
+    protected function getEventName()
+    {
+        $filter = [
+            "TYPE_ID" => self::EVENT_NAME,
+            "LID"     => "ru"
+        ];
+        $result = CEventType::GetList($filter);
+        return $result->Fetch();
+    }
+
+    public function up()
+    {
+        if ($this->getEventName()) {
+            Logger::log("Event with same name already exists", Logger::COLOR_RED);
+            return false;
+        }
+        $obEventType = new \CEventType;
+        $obEventType->add(
+            [
+                "EVENT_NAME"  => self::EVENT_NAME,
+                "NAME"        => '__NAME__',
+                "LID"         => "ru",
+                "DESCRIPTION" => "#__# - __TEXT__"
+            ]
+        );
+    }
+
+    public function down()
+    {
+        if (!$this->getEventName()) {
+            Logger::log("Event was not deleted.", Logger::COLOR_RED);
+        } else {
+            Logger::log("Event was deleted successfully. ", Logger::COLOR_GREEN);
+        }
+        $et = new \CEventType;
+        $et->Delete(self::EVENT_NAME);
+    }
+}
