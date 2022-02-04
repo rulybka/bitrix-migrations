@@ -114,7 +114,11 @@ class TemplatesCollection
                 'path'        => $this->dir.'/event/event_msg_add.template',
                 'description' => 'Add new event template',
             ],
-
+            [
+                'name'        => 'group_add',
+                'path'        => $this->dir.'/group/group_add.template',
+                'description' => 'Add new users group',
+            ],
         ];
 
         foreach ($templates as $template) {
