@@ -1,0 +1,52 @@
+<?php
+
+use Arrilot\BitrixMigrations\BaseMigrations\BitrixMigration;
+use Arrilot\BitrixMigrations\Logger;
+use Bitrix\Main\GroupTable;
+
+class __className__ extends BitrixMigration
+{
+    const NAME = '__';
+    const DESC = '__';
+    const STRING_ID = '__'; //CODE
+
+    protected static function getGroup()
+    {
+        $result = GroupTable::getList(
+            [
+                'select'  => ['ID'],
+                'filter'  => ['%=STRING_ID' => self::STRING_ID]
+            ]
+        );
+        if ($data = $result->fetch()) {
+            return $data['ID'];
+        }
+    }
+
+    public function up()
+    {
+        if (self::getGroup()) {
+            Logger::log("Error. Group with same string_id is already exist.", Logger::COLOR_RED);
+            return false;
+        }
+        $fields = [
+            'ACTIVE' => 'Y',
+            'C_SORT' => 0,
+            'NAME' => self::NAME,
+            'DESCRIPTION' => self::DESC,
+            'STRING_ID' => self::STRING_ID
+        ];
+        GroupTable::add($fields);
+        Logger::log("Group was created successfully", Logger::COLOR_GREEN);
+    }
+
+    public function down()
+    {
+        if ($id = self::getGroup()) {
+            GroupTable::delete($id);
+            Logger::log("Rollback successfully. Group was delete.", Logger::COLOR_GREEN);
+        } else {
+            Logger::log("Fail rollback. Group was not delete.", Logger::COLOR_RED);
+        }
+    }
+}
