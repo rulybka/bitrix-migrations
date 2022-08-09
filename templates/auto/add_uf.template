@@ -13,9 +13,21 @@ class __className__ extends BitrixMigration
      */
     public function up()
     {
-        $fields = __fields__;
+        $arField = CUserTypeEntity::GetList(
+            ['ID' => 'ASC'],
+            [
+                    'ENTITY_ID' => __entity__,
+                    'FIELD_NAME' => __code__,
+                ]
+        )->fetch();
+        if (empty($arField)) {
+            $fields = __fields__;
+            if (!empty($fields['SETTINGS']) && is_array($fields['SETTINGS']) === false) {
+                $fields['SETTINGS'] = unserialize($fields['SETTINGS']);
+            }
 
-        $this->addUF($fields);
+            $this->addUF($fields);
+        }
     }
 
     /**
