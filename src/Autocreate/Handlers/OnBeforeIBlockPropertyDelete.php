@@ -3,6 +3,7 @@
 namespace Arrilot\BitrixMigrations\Autocreate\Handlers;
 
 use CIBlockProperty;
+use CIBlock;
 
 class OnBeforeIBlockPropertyDelete extends BaseHandler implements HandlerInterface
 {
@@ -14,6 +15,7 @@ class OnBeforeIBlockPropertyDelete extends BaseHandler implements HandlerInterfa
     public function __construct($params)
     {
         $this->fields = CIBlockProperty::getByID($params[0])->fetch();
+        $this->fields['IBLOCK_CODE'] = CIBlock::GetByID($this->fields['IBLOCK_ID'])->fetch()['CODE'];
     }
 
     /**
@@ -45,6 +47,7 @@ class OnBeforeIBlockPropertyDelete extends BaseHandler implements HandlerInterfa
     {
         return [
             'iblockId' => $this->fields['IBLOCK_ID'],
+            'iblockCode' => "'".$this->fields['IBLOCK_CODE']."'",
             'code'     => "'".$this->fields['CODE']."'",
         ];
     }

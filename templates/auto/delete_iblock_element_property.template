@@ -13,7 +13,9 @@ class __className__ extends BitrixMigration
      */
     public function up()
     {
-        $id = $this->getIblockPropIdByCode(__code__, __iblockId__);
+        $iblockId = $this->getIblockIdByCode(__iblockCode__);
+
+        $id = $this->getIblockPropIdByCode(__code__, $iblockId);
 
         $ibp = new CIBlockProperty();
         $deleted = $ibp->delete($id);
